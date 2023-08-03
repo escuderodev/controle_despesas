@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity(name = "Despesa")
 @Table(name = "despesas")
@@ -27,6 +28,9 @@ public class Despesa {
     private Timestamp dataCadastro;
     @UpdateTimestamp
     private Timestamp dataAtualizacao;
+    private BigDecimal totalDespesas;
+    private BigDecimal totalPago;
+    private BigDecimal totalDevido;
 
     public Despesa(DadosCadastroDespesa dados) {
         this.descricao = dados.descricao();
@@ -44,5 +48,31 @@ public class Despesa {
         this.valor = dados.valor();
         this.dataVencimento = dados.dataVencimento();
         this.dataPagamento = dados.dataPagamento();
+    }
+
+    public BigDecimal calculaTotalDespesas(List<Despesa> despesas) {
+        BigDecimal totalDespesas = new BigDecimal(0);
+        for (int i = 0; i < despesas.size(); i ++) {
+            totalDespesas = totalDespesas.add(despesas.get(i).getValor());
+        }
+        return totalDespesas;
+    }
+
+    public BigDecimal calculaTotalPago(List<Despesa> despesas) {
+        BigDecimal totalPago = new BigDecimal(0);
+        for (int i = 0; i < despesas.size(); i ++) {
+            totalPago = totalPago.add(despesas.get(i).getValor());
+        }
+        return totalPago;
+    }
+
+    public BigDecimal calculaTotalAPagar(List<Despesa> despesas) {
+
+        var despesa = new Despesa();
+        BigDecimal totalDespesas = despesa.calculaTotalDespesas(despesas);
+        BigDecimal totalPago = despesa.calculaTotalPago(despesas);
+        BigDecimal totalDevido = totalDespesas.subtract(totalPago);
+
+        return totalDevido;
     }
 }

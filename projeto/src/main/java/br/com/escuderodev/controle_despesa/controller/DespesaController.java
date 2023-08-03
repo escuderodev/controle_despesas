@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -21,18 +22,26 @@ public class DespesaController {
 
     @GetMapping("formulario")
     public String carregarFormularioCadastro(Long id, Model model) {
-//        if (id != null) {
-//            var despesa = repository.getReferenceById(id);
-//            model.addAttribute("despesa", despesa);
-//        }
+        if (id != null) {
+            var despesa = repository.getReferenceById(id);
+            model.addAttribute("despesa", despesa);
+        }
         return "despesa/formulario";
     }
 
     @GetMapping
     public String carregarListagemDespesas(Model model) {
-//        List<Despesa> despesas = repository.findAll();
-//        var despesa = new Despesa();
-//        model.addAttribute("listaDeDespesas", despesas);
+        List<Despesa> despesas = repository.findAll();
+        var despesa = new Despesa();
+        BigDecimal totalDespesas = despesa.calculaTotalDespesas(despesas);
+        BigDecimal totalPago = despesa.calculaTotalPago(despesas);
+        BigDecimal totalDevido = despesa.calculaTotalAPagar(despesas);
+
+        model.addAttribute("listaDeDespesas", despesas);
+        model.addAttribute("totalDespesas", totalDespesas);
+        model.addAttribute("totalPago", totalPago);
+        model.addAttribute("totalDevido", totalDevido);
+
         return "despesa/listagem";
     }
 

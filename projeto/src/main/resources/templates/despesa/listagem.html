@@ -1,10 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nx/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/css/formulario.css" th:href="@{/css/formulario.css}">
+    <title>Lista de Despesas</title>
 </head>
 <body>
-    <h1>Teste Listagem</h1>
+<header class="header">
+    <div>
+        <p class="logo"><a href="/despesas">Control<span>Desp</span></a></p>
+    </div>
+    <nav>
+        <ul class="nav">
+            <li class="nav-item"><a class="nav-link" href="/despesas">Lista de Despesas</a></li>
+            <li class="nav-item"><a class="nav-link" href="/despesas/formulario">Cadastro de Despesas</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">logout</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="main main_container main-lista">
+    <h1 class="lista_title">Lista de Despesas</h1>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col" class="col-1">Id</th>
+            <th scope="col" class="col-3">Descrição</th>
+            <th scope="col" class="col-2">Valor R$</th>
+            <th scope="col" class="col-2">Vencimento</th>
+            <th scope="col" class="col-2">Pagamento R$</th>
+            <th scope="col" class="col-2">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="despesa : ${listaDeDespesas}">
+            <td th:text="${despesa.idDespesa}"></td>
+            <td th:text="${despesa.descricao}"></td>
+            <td th:text="${'R$ ' + #numbers.formatDecimal(despesa.valor,1,2,'COMMA')}"></td>
+            <td th:text="${#temporals.format(despesa.dataVencimento, 'dd/MM/yyyy')}"></td>
+            <td th:text="${#temporals.format(despesa.dataPagamento, 'dd/MM/yyyy')}"></td>
+            <td>
+                <div class="td_acoes">
+                    <button><a th:href="@{/despesas/formulario?id={id}(id=${despesa.idDespesa})}" id="editar">Editar</a></button>
+                    <form action="/despesas" method="post">
+                        <input type="hidden" name="_method" value="delete">
+                        <input type="hidden" name="idDespesa" th:value="${despesa.idDespesa}">
+                        <button type="submit" id="btn_excluir">Excluir</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="total_container">
+        <div th:each="totalDespesas : ${totalDespesas}">
+            <p class="total_nome">Total Despesas  R$:</p> <input class="total" type="text" placeholder="0,00" th:value="${totalDespesas}" disabled="">
+        </div>
+        <div th:each="totalPago : ${totalPago}">
+            <p class="total_nome">Total Pago R$:</p> <input class="total" type="text" placeholder="0,00" th:value="${totalPago}" disabled="">
+        </div>
+        <div th:each="totalDevido : ${totalDevido}">
+            <p class="total_nome">Total à Pagar R$:</p> <input class="total" type="text" placeholder="0,00" th:value="${totalDevido}" disabled="">
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <p>Desenvolvido por <a class="footer_link" href="https://escuderodev.com.br/" target="_blank">Escudero<span>Dev</span></a> - 2023</p>
+</footer>
 </body>
 </html>

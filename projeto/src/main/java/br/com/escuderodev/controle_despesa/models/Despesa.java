@@ -28,9 +28,6 @@ public class Despesa {
     private Timestamp dataCadastro;
     @UpdateTimestamp
     private Timestamp dataAtualizacao;
-    private BigDecimal totalDespesas;
-    private BigDecimal totalPago;
-    private BigDecimal totalDevido;
 
     public Despesa(DadosCadastroDespesa dados) {
         this.descricao = dados.descricao();
@@ -61,7 +58,9 @@ public class Despesa {
     public BigDecimal calculaTotalPago(List<Despesa> despesas) {
         BigDecimal totalPago = new BigDecimal(0);
         for (int i = 0; i < despesas.size(); i ++) {
-            totalPago = totalPago.add(despesas.get(i).getValor());
+            if (despesas.get(i).dataPagamento != null) {
+                totalPago = totalPago.add(despesas.get(i).getValor());
+            }
         }
         return totalPago;
     }

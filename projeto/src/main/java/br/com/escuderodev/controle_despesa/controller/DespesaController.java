@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -32,6 +33,24 @@ public class DespesaController {
     @GetMapping
     public String carregarListagemDespesas(Model model) {
         List<Despesa> despesas = repository.findAll();
+        var despesa = new Despesa();
+        BigDecimal totalDespesas = despesa.calculaTotalDespesas(despesas);
+        BigDecimal totalPago = despesa.calculaTotalPago(despesas);
+        BigDecimal totalDevido = despesa.calculaTotalAPagar(despesas);
+
+        model.addAttribute("listaDeDespesas", despesas);
+        model.addAttribute("totalDespesas", totalDespesas);
+        model.addAttribute("totalPago", totalPago);
+        model.addAttribute("totalDevido", totalDevido);
+
+        return "despesa/listagem";
+    }
+
+    @GetMapping("/vencimento")
+    public String carregarListagemDespesasPorPeriodo(Model model) {
+        LocalDate dataInicial = LocalDate.of(2023, 10,01);
+        LocalDate dataFinal = LocalDate.of(2023, 10,31);
+        List<Despesa> despesas = repository.findAllByDataVencimentoGreaterThanEqualAndDataVencimentoLessThanEqual(dataInicial, dataFinal);
         var despesa = new Despesa();
         BigDecimal totalDespesas = despesa.calculaTotalDespesas(despesas);
         BigDecimal totalPago = despesa.calculaTotalPago(despesas);

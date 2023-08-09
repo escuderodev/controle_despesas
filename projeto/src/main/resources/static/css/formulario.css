@@ -9,7 +9,7 @@ body {
 }
 
 .header, .footer {
-    height: 10vh;
+    height: 7vh;
     background-color: white;
 }
 
@@ -42,7 +42,7 @@ body {
 
 
 .main {
-    height: 78vh;
+    height: 84vh;
 }
 
 .form_container {
@@ -61,6 +61,7 @@ body {
 .logo {
     font-size: 2rem;
     font-weight: bold;
+    margin-bottom: 0;
 }
 
 .logo a {
@@ -107,6 +108,7 @@ span {
 
 .lista_title {
     color: white;
+    font-size: 1.3rem;
 }
 
 td, th {
@@ -123,7 +125,7 @@ td, th {
 }
 
 .main-lista {
-    height: 80vh;
+    height: 86vh;
 }
 
 #editar {
@@ -175,4 +177,12 @@ input.total {
 .total_container {
     display: flex;
     gap: 1rem;
+}
+
+.novo {
+    color: red;
+}
+
+.novo:hover {
+    color: black;
 }
